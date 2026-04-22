@@ -7,6 +7,7 @@ public class MainVueltaEjercicio3 {
                 "RIBERA",
                 "ribera"
         )) {
+            // Sacar clasificacion de ciclistas por puntos totales
             String sqlClasificacion = "SELECT CICLISTA.NOMBRE AS NOMBRE_CICLISTA, EQUIPO.NOMBRE AS NOMBRE_EQUIPO, SUM(PARTICIPACION.PUNTOS) AS PUNTOS_TOTALES\n" +
                     "FROM CICLISTA JOIN EQUIPO USING(ID_EQUIPO)\n" +
                     "JOIN PARTICIPACION USING(ID_CICLISTA)\n" +
@@ -15,6 +16,8 @@ public class MainVueltaEjercicio3 {
 
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(sqlClasificacion);
+
+            // Recorremos los resultados con Resultset
             System.out.println("1. Clasificacion general por puntos: ");
             while (resultSet.next()) {
                 String nombre = resultSet.getString("NOMBRE_CICLISTA");
@@ -24,6 +27,7 @@ public class MainVueltaEjercicio3 {
                 System.out.println(nombre + " - " + equipo + " - " + puntosTotales);
             }
 
+            // Sacar clasificacion pro equipos
             String sqlPorEquipos = "SELECT NOMBRE, PAIS, (SELECT SUM(PUNTOS) FROM PARTICIPACION JOIN CICLISTA USING(ID_CICLISTA) WHERE ID_EQUIPO = e.ID_EQUIPO) AS PUNTOS_TOTAL\n" +
                     "FROM EQUIPO e\n" +
                     "ORDER BY PUNTOS_TOTAL DESC";
@@ -38,6 +42,7 @@ public class MainVueltaEjercicio3 {
                 System.out.println(nombre + " - " + pais + " - " + puntosTotales);
             }
 
+            // Sacar el Ranking de etapas largas de top 3 etapas
             String sqlEtapa = "SELECT NUMERO, ORIGEN, DESTINO, DISTANCIA_KM, FECHA\n" +
                     "FROM ETAPA\n" +
                     "ORDER BY DISTANCIA_KM DESC\n" +
@@ -55,6 +60,7 @@ public class MainVueltaEjercicio3 {
                 System.out.println(numero + " - " + origen + " - " + destino + " - " + distanciaKm + " - " + fecha);
             }
 
+            // Sacar el promedio de distancia de todas las etapas y muestra solo las etapas por encima de esa media.
             String sqlPromedio = "SELECT NUMERO, ORIGEN, DESTINO, DISTANCIA_KM, FECHA\n" +
                     "FROM ETAPA\n" +
                     "WHERE DISTANCIA_KM > (SELECT AVG(DISTANCIA_KM) FROM ETAPA)\n" +
